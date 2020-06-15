@@ -46,11 +46,7 @@ const openShortLink = async (req, res) => {
     // const { unique_name } = req.params;
 
     try {
-        //find the Url model that has that unique_name
         let url = await Url.findOne({originalUrl});
-
-        /** if such Url exists, redirect the user to the originalUrl
-         of that Url Model, else send a 404 Not Found Response */
         if (url) {
             //return res.redirect(url.originalUrl);
             return res.json({
@@ -60,7 +56,6 @@ const openShortLink = async (req, res) => {
             });
         } else {
             return res.status(404).json({error: 'Sorry, Not found'});
-
         }
     } catch (err) {
         //catch any error, and return server error to user

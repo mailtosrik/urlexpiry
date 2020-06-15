@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //route to create short link
 app.post('/createShortLink', createShortLink);
 //route to open short link, ':' means unique_name is a param
-app.get('/openShortLink', openShortLink);
+app.post('/openShortLink', openShortLink);
 //app.get('/originalUrl', openShortLink);
 
 /** NB: process.env.PORT is required as you would 
