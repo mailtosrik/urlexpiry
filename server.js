@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const db = require('./db.js');
 
 //Import controllers
-const { createShortLink, openShortLink, deleteShortLink } = require('./url.controller.js');
+const { createShortLink, openShortLink, deleteShortLink,retrieveOriginalURL } = require('./url.controller.js');
 
 //Call the express function to initiate an express app
 const app = express();
@@ -24,8 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //USE CONTROLLERS
 //route to create short link
 app.post('/createShortLink', createShortLink);
-//route to open short link, ':' means unique_name is a param
-app.post('/openShortLink', openShortLink);
+app.get('/:unique_name', openShortLink);
+app.post('/retrieveOriginalURL', retrieveOriginalURL);
 app.post('/deleteShortLink', deleteShortLink);
 //app.get('/originalUrl', openShortLink);
 

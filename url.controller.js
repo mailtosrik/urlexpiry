@@ -42,6 +42,35 @@ const createShortLink = async (req, res) => {
 
 const openShortLink = async (req, res) => {
     //get the unique name from the req params (e.g olamide from shorten.me/olamide)
+    const {unique_name} = req.params;
+
+    try {
+        //find the Url model that has that unique_name
+        let url = await Url.findOne({unique_name});
+
+        /** if such Url exists, redirect the user to the originalUrl
+         of that Url Model, else send a 404 Not Found Response */
+        if (url) {
+            return res.redirect(url.originalUrl);
+        } else {
+            return res.status(404).json({error: 'Not found'});
+        }
+    } catch (err) {
+        //catch any error, and return server error to user
+        console.log(err);
+        res.status(500).json({error: 'Server error'});
+    }
+};
+
+const deleteShortLink = async (res) => {
+    await shortURLdb.collection('urls').deleteMany({unique_name: 'amzn'});
+    return res.json({
+        message: 'success',
+        ok: true
+    });
+};
+
+const retrieveOriginalURL = async (req, res) => {
     let {originalUrl} = req.body;
     // const { unique_name } = req.params;
 
@@ -64,15 +93,7 @@ const openShortLink = async (req, res) => {
     }
 };
 
-const deleteShortLink = async (res) => {
-    await shortURLdb.collection('urls').deleteMany({unique_name: 'amzn'});
-    return res.json({
-        message: 'success',
-        ok: true
-    });
-};
-
 
 module.exports = {
-    createShortLink, openShortLink, deleteShortLink
+    createShortLink, openShortLink, deleteShortLink, retrieveOriginalURL
 }
