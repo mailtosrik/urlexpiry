@@ -49,8 +49,9 @@ const openShortLink = async (req, res) => {
     try {
         //find the Url model that has that unique_name
         let url = await Url.findOne({unique_name});
+
         if (url) {
-            const diffTime = Math.abs((Date.UTC() - url.dateCreated) / (1000 * 60 * 60));
+            const diffTime = Math.abs((Date.now() - url.dateCreated) / (1000 * 60 * 60));
             if (diffTime > 24.0) {
                 Url.deleteMany({unique_name: unique_name}).then(function () {
                     console.log("Data deleted"); // Success
