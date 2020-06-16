@@ -48,12 +48,12 @@ const openShortLink = async (req, res) => {
     try {
         let url = await Url.findOne({originalUrl});
         if (url) {
-            //return res.redirect(url.originalUrl);
-            return res.json({
-                message: 'success',
-                ok: true,
-                url
-            });
+            return res.redirect(url.originalUrl);
+            // return res.json({
+            //     message: 'success',
+            //     ok: true,
+            //     url
+            // });
         } else {
             return res.status(404).json({error: 'Sorry, Not found'});
         }
@@ -64,8 +64,8 @@ const openShortLink = async (req, res) => {
     }
 };
 
-const deleteShortLink = async (req, res) => {
-    await db.collection('urls').deleteMany({unique_name: 'amzn'});
+const deleteShortLink = async (res) => {
+    await shortURLdb.collection('urls').deleteMany({unique_name: 'amzn'});
     return res.json({
         message: 'success',
         ok: true
