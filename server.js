@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const db = require('./db.js');
 
 //Import controllers
-const { createShortLink, openShortLink } = require('./url.controller.js');
+const { createShortLink, openShortLink, deleteShortLink } = require('./url.controller.js');
 
 //Call the express function to initiate an express app
 const app = express();
@@ -26,7 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.post('/createShortLink', createShortLink);
 //route to open short link, ':' means unique_name is a param
 app.post('/openShortLink', openShortLink);
+app.post('/deleteShortLink', deleteShortLink);
 //app.get('/originalUrl', openShortLink);
+
 
 /** NB: process.env.PORT is required as you would 
 not be able to set the port manually in production */

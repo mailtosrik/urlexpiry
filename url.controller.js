@@ -64,6 +64,15 @@ const openShortLink = async (req, res) => {
     }
 };
 
+const deleteShortLink = async (req, res) => {
+    await db.collection('urls').deleteMany({unique_name: 'amzn'});
+    return res.json({
+        message: 'success',
+        ok: true
+    });
+};
+
+
 module.exports = {
-    createShortLink, openShortLink
+    createShortLink, openShortLink, deleteShortLink
 }
