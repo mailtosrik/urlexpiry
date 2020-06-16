@@ -1,5 +1,6 @@
 //import Url model
 const Url = require('./url.model.js');
+const db = require('./db.js');
 
 //This is basically your domain name
 const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
@@ -40,6 +41,7 @@ const createShortLink = async (req, res) => {
     }
 };
 
+
 const openShortLink = async (req, res) => {
     //get the unique name from the req params (e.g olamide from shorten.me/olamide)
     const {unique_name} = req.params;
@@ -47,11 +49,18 @@ const openShortLink = async (req, res) => {
     try {
         //find the Url model that has that unique_name
         let url = await Url.findOne({unique_name});
-
-        /** if such Url exists, redirect the user to the originalUrl
-         of that Url Model, else send a 404 Not Found Response */
         if (url) {
-            return res.redirect(url.originalUrl);
+            const diffTime = Math.abs((Date.UTC() - url.dateCreated) / (1000 * 60 * 60));
+            if (diffTime > 24.0) {
+                Url.deleteMany({unique_name: unique_name}).then(function () {
+                    console.log("Data deleted"); // Success
+                    //return res.redirect()
+                }).catch(function (error) {
+                    console.log(error); // Failure
+                });
+            } else {
+                return res.redirect(url.originalUrl);
+            }
         } else {
             return res.status(404).json({error: 'Not found'});
         }
@@ -62,12 +71,29 @@ const openShortLink = async (req, res) => {
     }
 };
 
-const deleteShortLink = async (res) => {
-    await shortURLdb.collection('urls').deleteMany({unique_name: 'amzn'});
-    return res.json({
-        message: 'success',
-        ok: true
-    });
+const deleteShortLink = async (req, res) => {
+    let {unique_name} = req.body;
+    try {
+        let url = await Url.findOne({unique_name});
+        if (url) {
+            Url.deleteMany({unique_name: unique_name}).then(function () {
+                console.log("Data deleted"); // Success
+                return res.json({
+                    message: 'success',
+                    ok: true
+                });
+            }).catch(function (error) {
+                console.log(error); // Failure
+            });
+        } else {
+            return res.status(404).json({error: 'Sorry, Not found'});
+        }
+    } catch (err) {
+        //catch any error, and return server error to user
+        console.log(err);
+        res.status(500).json({error: 'Server error'});
+    }
+
 };
 
 const retrieveOriginalURL = async (req, res) => {
