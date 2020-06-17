@@ -51,11 +51,15 @@ const openShortLink = async (req, res) => {
         let url = await Url.findOne({unique_name});
 
         if (url) {
+            var d = new Date(Date.now());
             const diffTime = Math.abs((Date.now() - url.dateCreated) / (1000 * 60 * 60));
+            // console.log(url.dateCreated);
+            // console.log(Date.now())
+            // console.log(diffTime);
             if (diffTime > 24.0) {
                 Url.deleteMany({unique_name: unique_name}).then(function () {
-                    console.log("Data deleted"); // Success
-                    //return res.redirect()
+                    //console.log("Data deleted"); // Success
+                    return res.send('Error - The page is expired');
                 }).catch(function (error) {
                     console.log(error); // Failure
                 });
@@ -63,11 +67,11 @@ const openShortLink = async (req, res) => {
                 return res.redirect(url.originalUrl);
             }
         } else {
-            return res.status(404).json({error: 'Not found'});
+            return res.send('Error 404 - Page Not found');
         }
     } catch (err) {
         //catch any error, and return server error to user
-        console.log(err);
+        //console.log(err);
         res.status(500).json({error: 'Server error'});
     }
 };
@@ -78,7 +82,7 @@ const deleteShortLink = async (req, res) => {
         let url = await Url.findOne({unique_name});
         if (url) {
             Url.deleteMany({unique_name: unique_name}).then(function () {
-                console.log("Data deleted"); // Success
+                //console.log("Data deleted"); // Success
                 return res.json({
                     message: 'success',
                     ok: true
