@@ -3,7 +3,8 @@ const Url = require('./url.model.js');
 const db = require('./db.js');
 
 //This is basically your domain name
-const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+const baseUrl = process.env.BASE_URL;
+//|| 'http://localhost:3000';
 
 
 const createShortLink = async (req, res) => {
