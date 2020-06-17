@@ -4,6 +4,7 @@ const db = require('./db.js');
 
 //This is basically your domain name
 const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+//const baseUrl = 'http://dxcchatbot'
 
 const createShortLink = async (req, res) => {
     //get the originalUrl and unique_name from the request's body
@@ -55,7 +56,7 @@ const openShortLink = async (req, res) => {
             const diffTime = Math.abs((Date.now() - url.dateCreated) / (1000 * 60 * 60));
             // console.log(url.dateCreated);
             // console.log(Date.now())
-            // console.log(diffTime);
+            console.log(diffTime);
             if (diffTime > 24.0) {
                 Url.deleteMany({unique_name: unique_name}).then(function () {
                     //console.log("Data deleted"); // Success
