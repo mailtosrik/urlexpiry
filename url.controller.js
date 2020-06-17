@@ -4,7 +4,7 @@ const db = require('./db.js');
 
 //This is basically your domain name
 const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-//const baseUrl = 'http://dxcchatbot'
+
 
 const createShortLink = async (req, res) => {
     //get the originalUrl and unique_name from the request's body
